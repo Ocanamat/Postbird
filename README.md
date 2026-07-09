@@ -64,6 +64,36 @@ status bar — plus the email **body** (via `userContent.css`). Highlights:
 - Optional: the *Auto Profile Picture* add-on for sender gravatars (Postbird
   sizes/centres them if present; it doesn't require them).
 
+## Deploying (`scripts/deploy.ps1`)
+
+One command does a full install: it copies the CSS into your profile, writes the
+recommended prefs, and (when Betterbird is closed) the recommended layout. Run it
+again — and restart Betterbird — after any change; the loaders are only read at
+startup.
+
+```powershell
+./scripts/deploy.ps1                        # full install into the auto-detected profile
+./scripts/deploy.ps1 -SkipPrefs -SkipLayout # CSS only — don't touch prefs/layout
+./scripts/deploy.ps1 -Link                  # live-edit mode (junction, no re-copy)
+./scripts/deploy.ps1 -ProfilePath 'C:\...\xxxx.default-release'
+```
+
+| Option | What it does |
+|--------|--------------|
+| *(none)* | Auto-detect the profile (`profiles.ini` default, else newest `*.default-release` under `%APPDATA%\Betterbird` or `…\Thunderbird`), then run all three steps below. |
+| `-ProfilePath <dir>` | Use this profile directory instead of auto-detecting — for non-standard setups or a second profile. |
+| `-SkipPrefs` | Skip step 2: don't write the recommended prefs (`user.js`). |
+| `-SkipLayout` | Skip step 3: don't write the recommended layout (`xulstore.json`). |
+| `-Link` | Junction `chrome/postbird` into the profile instead of copying, so repo edits are live (the loaders are still copied; a restart is still needed). |
+
+The three steps:
+
+1. **CSS** — copies `userChrome.css`, `userContent.css` and `chrome/postbird/` into `<profile>\chrome\`.
+2. **Prefs** → [`configure-prefs.ps1`](scripts/configure-prefs.ps1) writes a managed block to `user.js` (enables user stylesheets, Cards view, the Postbox-like vertical layout, icon-over-text toolbar, threaded view). These are re-applied every startup; run `configure-prefs.ps1 -Remove` to unlock them for editing in the UI.
+3. **Layout** → [`configure-xulstore.ps1`](scripts/configure-xulstore.ps1) writes `xulstore.json` (unified toolbar, Unified Folders + All + Tags, auto-hide menu bar, compact header). Betterbird **must be closed** for this — it rewrites that file on exit — so if the app is running, `deploy.ps1` skips this step with a note. These are live settings you can still change afterwards in the UI.
+
+Steps 2 and 3 can also be run on their own (both auto-detect the profile the same way). After deploying, **restart Betterbird**.
+
 ## Configure
 
 All colours and sizes are `--pb-*` tokens in
