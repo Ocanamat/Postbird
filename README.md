@@ -1,6 +1,8 @@
 <div align="center">
 
-# postbird
+<img src="docs/logo.png" alt="Postbird logo" width="96">
+
+# Postbird
 
 **A [Postbox](https://en.wikipedia.org/wiki/Postbox_(email_client))-style theme for [Betterbird](https://www.betterbird.eu/) — pure `userChrome` / `userContent` CSS. No add-ons, no JS.**
 
@@ -11,7 +13,7 @@
 [![Stars](https://img.shields.io/github/stars/Ocanamat/Postbird?style=flat)](https://github.com/Ocanamat/Postbird/stargazers)
 [![Last commit](https://img.shields.io/github/last-commit/Ocanamat/Postbird)](https://github.com/Ocanamat/Postbird/commits)
 
-<img src="docs/screenshot.png" alt="postbird — Postbox-style theme for Betterbird" width="900">
+<img src="docs/screenshot.png" alt="Postbird — Postbox-style theme for Betterbird" width="900">
 
 </div>
 
@@ -20,22 +22,22 @@
 ```powershell
 git clone https://github.com/Ocanamat/Postbird.git postbird
 cd postbird
-./scripts/deploy.ps1        # auto-detects your Betterbird/Thunderbird profile
+./scripts/deploy.ps1        # auto-detects your profile; applies CSS + prefs + layout
 ```
 
-Then, in Betterbird:
+`deploy.ps1` does everything a fresh install needs: it copies the CSS, writes
+the recommended prefs (`user.js` — enables user stylesheets, Cards view, the
+Postbox-like vertical layout) and, **if Betterbird is closed**, the recommended
+layout (`xulstore.json` — toolbar, folder modes, compact header). Then
+**restart Betterbird**.
 
-1. **Settings → General → Config Editor** → set
-   `toolkit.legacyUserProfileCustomizations.stylesheets` = `true` (one-time).
-2. **View ▸ Layout ▸ Cards view** (the thread pane rules need it).
-3. **Restart Betterbird.**
-
-Re-run `deploy.ps1` and restart after any change. `-ProfilePath` overrides
-auto-detection; `-Link` junctions the folder for live editing.
+Re-run `deploy.ps1` and restart after any change. Opt out of the extras with
+`-SkipPrefs` / `-SkipLayout`; `-ProfilePath` overrides auto-detection; `-Link`
+junctions the folder for live editing.
 
 ---
 
-postbird recreates the look and feel of the discontinued **Postbox** email
+Postbird recreates the look and feel of the discontinued **Postbox** email
 client — specifically its **"Monterail Dark"** theme: a light content area with
 an orange accent and a dark charcoal folder pane.
 
@@ -59,7 +61,7 @@ status bar — plus the email **body** (via `userContent.css`). Highlights:
 
 - Betterbird 140.x (`toolkit.legacyUserProfileCustomizations.stylesheets = true`).
 - Thread pane in **Cards view**.
-- Optional: the *Auto Profile Picture* add-on for sender gravatars (postbird
+- Optional: the *Auto Profile Picture* add-on for sender gravatars (Postbird
   sizes/centres them if present; it doesn't require them).
 
 ## Configure
@@ -82,7 +84,7 @@ scripts/deploy.ps1
 
 ## Design goal: cheap repair
 
-Betterbird ESR updates move selectors. postbird is built so a break is findable
+Betterbird ESR updates move selectors. Postbird is built so a break is findable
 in minutes: every rule maps to a row in
 [`docs/selector-map.md`](docs/selector-map.md), and
 [`docs/migration-runbook.md`](docs/migration-runbook.md) is the step-by-step fix.
@@ -127,5 +129,5 @@ import files on its own — that needs a real add-on).
 
 ## Licence
 
-[MIT](LICENSE). postbird's CSS/docs/scripts only; it targets — but bundles none
+[MIT](LICENSE). Postbird's CSS/docs/scripts only; it targets — but bundles none
 of — Betterbird/Thunderbird/Mozilla (MPL-2.0) or Postbox.

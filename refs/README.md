@@ -3,7 +3,7 @@
 Everything under `refs/` except this file and `betterbird-version.txt` is
 **gitignored** on purpose. It's the maintainer's local working material and must
 not go to a public repo — for privacy, copyright, and size reasons. To work on
-postbird locally, repopulate these yourself:
+Postbird locally, repopulate these yourself:
 
 | Folder | What it is | How to get it | Why it's not published |
 |--------|-----------|---------------|------------------------|
