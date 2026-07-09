@@ -16,6 +16,10 @@ refs/*
 # --- Local, machine-specific, or regenerable ---
 .codegraph/
 
+# --- Local screenshot tooling (GreenMail populate) — not part of the theme ---
+scripts/populate_screenshots.py
+scripts/SCREENSHOTS.md
+
 # --- AI-assistant assets: kept LOCAL (agents still use them), not published ---
 .claude/
 .gemini/
