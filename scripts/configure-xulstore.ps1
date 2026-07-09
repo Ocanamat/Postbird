@@ -91,22 +91,30 @@ $headerLayout = [ordered]@{
     hideLabels = $true; subjectLarge = $true; buttonStyle = 'only-icons'; collapsed = $false
 } | ConvertTo-Json -Compress
 
-# element -> attribute -> value (strings, as XULStore stores them)
-$items = [ordered]@{
-    'folderTree'      = @{ mode = 'favorite,all,tags' }
-    'toolbar-menubar' = @{ autohide = 'true' }
-    'quickFilterBar'  = @{ collapsed = 'true'; visible = 'false' }
-    'unifiedToolbar'  = @{ state = $toolbarState }
-    'messageHeader'   = @{ layout = $headerLayout }
+# document -> element -> attribute -> value (strings, as XULStore stores them)
+$docItems = [ordered]@{
+    'chrome://messenger/content/messenger.xhtml' = [ordered]@{
+        'folderTree'      = @{ mode = 'smart,all,tags' }   # Unified Folders + All Folders + Tags
+        'toolbar-menubar' = @{ autohide = 'true' }
+        'quickFilterBar'  = @{ collapsed = 'true'; visible = 'false' }
+        'unifiedToolbar'  = @{ state = $toolbarState }
+        'messageHeader'   = @{ layout = $headerLayout }
+    }
+    'about:message' = [ordered]@{
+        # Compact message header (moves To/tags into the compact arrangement).
+        'messageHeader' = @{ compact = 'compact'; movetags = 'movetags'; movetoheader = 'movetoheader' }
+    }
 }
 
 # --- Merge into xulstore.json (preserve everything else) ---
 $xulstore = Join-Path $ProfilePath 'xulstore.json'
 $xs = (Test-Path $xulstore) ? (Get-Content $xulstore -Raw | ConvertFrom-Json -AsHashtable) : @{}
-if (-not $xs.ContainsKey($DOC)) { $xs[$DOC] = @{} }
-foreach ($el in $items.Keys) {
-    if (-not $xs[$DOC].ContainsKey($el)) { $xs[$DOC][$el] = @{} }
-    foreach ($attr in $items[$el].Keys) { $xs[$DOC][$el][$attr] = $items[$el][$attr] }
+foreach ($doc in $docItems.Keys) {
+    if (-not $xs.ContainsKey($doc)) { $xs[$doc] = @{} }
+    foreach ($el in $docItems[$doc].Keys) {
+        if (-not $xs[$doc].ContainsKey($el)) { $xs[$doc][$el] = @{} }
+        foreach ($attr in $docItems[$doc][$el].Keys) { $xs[$doc][$el][$attr] = $docItems[$doc][$el][$attr] }
+    }
 }
 
 # Back up once, then write.
@@ -114,7 +122,7 @@ if (Test-Path $xulstore) { Copy-Item $xulstore "$xulstore.postbird-bak" -Force }
 $xs | ConvertTo-Json -Depth 30 -Compress | Set-Content $xulstore -Encoding UTF8
 
 Write-Host "Applied XULStore layout to: $xulstore" -ForegroundColor Cyan
-$items.Keys | ForEach-Object { Write-Host "  $_" }
+foreach ($doc in $docItems.Keys) { $docItems[$doc].Keys | ForEach-Object { Write-Host "  [$doc] $_" } }
 Write-Host "(backup: $xulstore.postbird-bak)" -ForegroundColor DarkGray
 Write-Host ''
 Write-Host '  START Betterbird to see it. These are live settings — you can still change them in the UI.' -ForegroundColor Yellow

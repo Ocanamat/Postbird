@@ -1,16 +1,17 @@
 <#
 .SYNOPSIS
-    Deploy the postbird theme into a Betterbird (or Thunderbird) profile.
+    Deploy postbird into a Betterbird (or Thunderbird) profile — one command.
 
 .DESCRIPTION
-    Mirrors  chrome\postbird\  and copies  chrome\userChrome.css  and
-    chrome\userContent.css  into  <profile>\chrome\ . Only the files postbird
-    owns are touched — other files in the profile's chrome\ folder are left
-    alone.  (userChrome.css styles the app UI; userContent.css styles the email
-    body. postbird's config.css tokens are shared by both.)
+    Does everything a fresh install needs:
+      1. Copies the CSS (chrome\postbird\, userChrome.css, userContent.css).
+      2. Applies recommended prefs   (calls configure-prefs.ps1 -> user.js).
+      3. Applies recommended layout   (calls configure-xulstore.ps1 -> XULStore),
+         but only if Betterbird is CLOSED (it rewrites that file on exit); if it
+         is running, this step is skipped with a note.
+    Only files/settings postbird owns are touched. Restart the app afterwards.
 
-    Both files are only read at startup, so the app must be restarted after
-    every deploy. This script reminds you; it does not restart for you.
+    Skip parts with -SkipPrefs / -SkipLayout (e.g. CSS-only: both).
 
     The profile is auto-detected from %APPDATA%\Betterbird or ...\Thunderbird
     (the default install in profiles.ini, else the newest *.default-release).
@@ -31,7 +32,9 @@
 [CmdletBinding()]
 param(
     [string] $ProfilePath,
-    [switch] $Link
+    [switch] $Link,
+    [switch] $SkipPrefs,    # don't apply recommended prefs (user.js)
+    [switch] $SkipLayout    # don't apply recommended layout (XULStore)
 )
 
 $ErrorActionPreference = 'Stop'
@@ -109,6 +112,25 @@ Write-Host "Copied userChrome.css -> $destChrome" -ForegroundColor Cyan
 if (Test-Path $sourceContent) {
     Copy-Item $sourceContent (Join-Path $destChrome 'userContent.css') -Force
     Write-Host "Copied userContent.css -> $destChrome" -ForegroundColor Cyan
+}
+
+# --- Recommended prefs (user.js) — safe while the app is open (read at startup). ---
+if (-not $SkipPrefs) {
+    & (Join-Path $PSScriptRoot 'configure-prefs.ps1') -ProfilePath $ProfilePath
+}
+
+# --- Recommended layout (XULStore) — needs the app CLOSED (it rewrites the file
+# on exit). If it's running, skip with a note rather than failing the deploy. ---
+if (-not $SkipLayout) {
+    $running = Get-Process -Name 'betterbird', 'thunderbird' -ErrorAction SilentlyContinue
+    if ($running) {
+        Write-Host ''
+        Write-Host '  NOTE: layout settings (toolbar/folder modes/header) were NOT applied' -ForegroundColor Yellow
+        Write-Host '  because Betterbird is running. Fully close it, then re-run deploy.ps1' -ForegroundColor Yellow
+        Write-Host '  (or run scripts\configure-xulstore.ps1) to apply them.' -ForegroundColor Yellow
+    } else {
+        & (Join-Path $PSScriptRoot 'configure-xulstore.ps1') -ProfilePath $ProfilePath
+    }
 }
 
 Write-Host ''

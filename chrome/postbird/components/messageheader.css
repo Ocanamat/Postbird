@@ -85,6 +85,27 @@
   min-height: 0 !important;
 }
 
+/* MH-09  Port A — hide noisy technical header rows (only shown in all-headers
+ * view) for a cleaner header. Content fields (Cc/Bcc/Reply-To/Tags/Date/…) are
+ * intentionally NOT hidden (that stays user-personal). Addon rows like DKIM are
+ * not listed (may not exist). */
+#messageHeader :is(
+  #expandedmessage-idRow,
+  #expandedin-reply-toRow,
+  #expandedreferencesRow,
+  #expandeduser-agentRow,
+  #expandedarchived-at,
+  #expandedlist-id,
+  #expandedlist-help,
+  #expandedlist-unsubscribe,
+  #expandedlist-subscribe,
+  #expandedlist-post,
+  #expandedlist-owner,
+  #expandedlist-archive
+) {
+  display: none !important;
+}
+
 /* MH-ACCOUNT-PILL — NOT IMPLEMENTED (CSS-only cannot do it).
  * Requested: a pill before the date showing the RECEIVING account name
  * (Main / Personal / Work-MS …) tinted with that account's colour.
