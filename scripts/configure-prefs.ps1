@@ -44,9 +44,13 @@ $ErrorActionPreference = 'Stop'
 # Recommended prefs (edit values here). Format: name = value (bool/int).
 $Prefs = [ordered]@{
     'toolkit.legacyUserProfileCustomizations.stylesheets' = $true
-    'mail.pane_config.dynamic'                            = 2
-    'mail.threadpane.listview'                            = 0
-    'mail.threadpane.cardsview.rowcount'                  = 2
+    'mail.pane_config.dynamic'                            = 2      # Vertical (message pane on the right)
+    'mail.pane_config.multiline_all'                      = $true  # multi-line rows in all views
+    'mail.threadpane.listview'                            = 0      # Cards view
+    'mail.threadpane.cardsview.rowcount'                  = 2      # 2-line cards
+    'toolbar.unifiedtoolbar.buttonstyle'                  = 1      # toolbar buttons: icons-above-text
+    'mailnews.default_view_flags'                         = 1      # threaded view
+    'mail.ui.display.dateformat.always_show_time'         = $true  # show time in the date column
 }
 
 $BEGIN = '// >>> postbird recommended prefs (managed - do not edit inside) >>>'

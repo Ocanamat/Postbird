@@ -22,11 +22,16 @@
   --spaces-bg-color: var(--pb-spaces-bg) !important;
 }
 
-/* ST-02  Vertically centre the space icons, keeping settings/collapse pinned
- * to the bottom. `justify-content: center` alone didn't take on this 3-container
- * flex (top / addons / bottom); auto top-margins on the top + bottom containers
- * split the free space, which centres the icon group and pins the bottom group.
- * (messenger.xhtml:3772/3820 — .spaces-toolbar-top/bottom-container.) */
+/* ST-02  Vertically centre the space icons, keeping settings/collapse at the
+ * bottom. The blocker was #spacesToolbarAddonsContainer { flex: 1 1 0 }
+ * (spacesToolbar.css:322): it grows to fill the column, pinning the top icons
+ * up and settings down, so neither justify-content nor auto-margins could move
+ * them. Neutralise that grow, then auto top-margins on the top + bottom
+ * containers split the free space — centring the icons, pinning the bottom.
+ * (messenger.xhtml:3772/3806/3820.) */
+#spacesToolbarAddonsContainer {
+  flex: 0 0 auto !important;
+}
 #spacesToolbar .spaces-toolbar-top-container,
 #spacesToolbar .spaces-toolbar-bottom-container {
   margin-block-start: auto !important;
