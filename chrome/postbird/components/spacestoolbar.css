@@ -23,8 +23,12 @@
 }
 
 /* ST-03  Slightly smaller icons + tighter padding → a narrower rail.
- * (spacesToolbar.css:34-37 defaults: icon 20px, padding 7px, button-padding 5px.) */
-#spacesToolbar {
+ * Set on :root (NOT #spacesToolbar): Betterbird computes --spaces-total-width
+ * on :root from these vars, and the window content is shifted right by that
+ * width. Overriding only on #spacesToolbar shrank the rail but left the shift
+ * at the default width → a gap between the rail and the content. On :root, the
+ * shift recalculates to match. (spacesToolbar.css:34-37 defaults 20/7/5px.) */
+:root {
   --spaces-icon-size: var(--pb-spaces-icon-size) !important;
   --spaces-padding: 5px !important;
   --spaces-button-padding: 4px !important;

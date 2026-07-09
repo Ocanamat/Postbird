@@ -33,18 +33,11 @@
   color: var(--pb-text-date) !important;
 }
 
-/* MH-04  Show the "To" (sent-to) recipient in the compact header, Postbox-style.
- * BB hides secondary rows in the collapsed header; force the To row visible.
- * (aboutMessage.xhtml:1164 #expandedtoRow / #expandedtoBox.) EXPERIMENTAL —
- * verify it doesn't crowd the collapsed layout.
- * ------------------------------------------------------------------------ */
-#messageHeader #expandedtoRow {
-  display: flex !important;
-  /* Bottom-align the To/date with the sender's email line instead of the
-   * sender name (it was sitting too high / out of place). */
-  align-self: flex-end !important;
-  align-items: flex-end !important;
-}
+/* MH-04 (removed). We previously forced #expandedtoRow to display:flex and
+ * bottom-aligned it — but that fought the header's own grid layout, which is
+ * exactly what mis-aligned the To line once compact mode was on. The compact
+ * header + `movetoheader` (applied via configure-xulstore, Port D) arranges the
+ * To row natively, so postbird no longer touches its layout. */
 
 /* MH-05  Slightly smaller header avatar (~8% down from BB's 26px). */
 #messageHeader {
