@@ -4,14 +4,35 @@ All notable changes to postbird. Versions track the definition of done in
 `CLAUDE.md`; after v1.0, only migration repairs (Betterbird ESR bumps) are in
 scope unless scope is explicitly re-opened.
 
-## [Unreleased] — v1.1 (in progress)
+## [1.1.0] — 2026-07-09
 
+Layout + spaces toolbar, and one-command setup tooling.
+
+### Theme (CSS)
 - **Spaces toolbar** (`spacestoolbar.css`): light rail (`#E8E8E8`, matching the
-  toolbar) with vertically-centred icons.
-- **Folder pane**: hide the header Get Messages + New Message buttons (FP-12).
-- **`scripts/configure-prefs.ps1`**: writes recommended Betterbird prefs to
-  `user.js` — message-pane layout, Cards view, 2-line cards, and enabling
-  userChrome. (Tooling, not part of the CSS theme.)
+  toolbar), vertically-centred icons, slightly smaller (16px) — with the window
+  content shift kept flush (no gap).
+- **Folder pane**: hide the whole header bar (New Message / Get Messages / more)
+  — FP-12; section divider toned into the pane; symmetric section spacing.
+- **Message header**: hide noisy technical rows (message-id, references,
+  user-agent, list-\*, …) — MH-09 / "Port A".
+
+### Setup tooling (PowerShell)
+- **`deploy.ps1` now does everything in one command**: copies the CSS, applies
+  recommended prefs, and applies recommended layout (the latter only if
+  Betterbird is closed). `-SkipPrefs` / `-SkipLayout` to opt out.
+- **`configure-prefs.ps1`** (`user.js`): message-pane layout = Vertical, Cards
+  view, 2-line cards, icon-over-text toolbar, threaded view, show-time,
+  multiline, and enabling userChrome.
+- **`configure-xulstore.ps1`** (`xulstore.json`): clean mail-toolbar layout
+  (native buttons + flexible spaces), folder-pane modes (Unified Folders + All +
+  Tags), menu-bar auto-hide, quick-filter hidden, compact message header.
+
+### Docs
+- README screenshot; roadmap gains the star-next-to-subject and collapsible-
+  header items (userChrome.js layer).
+
+## [Unreleased]
 
 ## [1.0.0] — 2026-07-09
 
