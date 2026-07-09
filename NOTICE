@@ -1,0 +1,13 @@
+Postbird — scope of the MIT licence
+====================================
+
+The MIT licence in LICENSE covers the Postbird CSS, documentation, and scripts
+only.
+
+Postbird targets the DOM of Betterbird / Mozilla Thunderbird, which are licensed
+under the Mozilla Public License 2.0. No Betterbird, Thunderbird, or Mozilla
+source is included in this repository.
+
+"Postbox" and its "Monterail Dark" theme are the property of their respective
+owners and are referenced for design compatibility only; no Postbox code or
+assets are redistributed here.

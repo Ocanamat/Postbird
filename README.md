@@ -160,4 +160,5 @@ import files on its own — that needs a real add-on).
 ## Licence
 
 [MIT](LICENSE). Postbird's CSS/docs/scripts only; it targets — but bundles none
-of — Betterbird/Thunderbird/Mozilla (MPL-2.0) or Postbox.
+of — Betterbird/Thunderbird/Mozilla (MPL-2.0) or Postbox. See [`NOTICE`](NOTICE)
+for the full scope statement.

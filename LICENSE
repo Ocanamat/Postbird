@@ -19,14 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
---------------------------------------------------------------------------------
-This licence covers the postbird CSS, documentation, and scripts only.
-
-postbird targets the DOM of Betterbird / Mozilla Thunderbird, which are licensed
-under the Mozilla Public License 2.0. No Betterbird, Thunderbird, or Mozilla
-source is included in this repository.
-
-"Postbox" and its "Monterail Dark" theme are the property of their respective
-owners and are referenced for design compatibility only; no Postbox code or
-assets are redistributed here.
