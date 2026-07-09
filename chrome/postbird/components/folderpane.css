@@ -151,3 +151,11 @@
 #folderPane {
   --sidebar-border-color: var(--pb-sidebar-divider) !important;
 }
+
+/* FP-12  Hide the folder-pane header's Get Messages + New Message buttons.
+ * (about3Pane.xhtml:69,75 — #folderPaneWriteMessage / #folderPaneGetMessages.)
+ * The "..." (more) button stays for folder-pane options. */
+#folderPaneGetMessages,
+#folderPaneWriteMessage {
+  display: none !important;
+}

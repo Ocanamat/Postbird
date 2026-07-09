@@ -1,0 +1,28 @@
+/* ==========================================================================
+ * postbird — components/spacestoolbar.css
+ * UI region: the spaces toolbar (the left icon rail — Mail/Calendar/Tasks/…).
+ * Status: PORTED (v1.1).
+ *
+ * TARGET  : a LIGHT rail (Monterail toolbar tone, ~#E8E8E8) — not the darker
+ *           charcoal, and not OS-dark — with its space icons vertically centred.
+ *
+ * BB140   : Ground truth …/shared/spacesToolbar.css. The rail is
+ *           `#spacesToolbar` (class `.spaces-toolbar`), a fixed flex column
+ *           with `justify-content: space-between` (icons top, settings bottom).
+ *           Background comes from `--spaces-bg-color`
+ *           (`light-dark(#e8e8e8, #252525)`); icon groups are
+ *           `.spaces-toolbar-container`. See docs/selector-map.md region
+ *           'spacestoolbar'.
+ *
+ * WHY !important: userChrome is user-origin; see threadpane.css header.
+ * ------------------------------------------------------------------------ */
+
+/* ST-01  Light background, pinned regardless of OS light/dark mode. */
+#spacesToolbar {
+  --spaces-bg-color: var(--pb-spaces-bg) !important;
+}
+
+/* ST-02  Vertically centre the icons (default pins them to the top). */
+#spacesToolbar {
+  justify-content: center !important;
+}

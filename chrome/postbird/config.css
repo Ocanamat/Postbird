@@ -85,6 +85,9 @@
   /* Toolbar surface — Monterail two-tone (top → bottom) */
   --pb-toolbar-bg:        linear-gradient(var(--pb-c-toolbar-top), var(--pb-c-toolbar-bottom));
 
+  /* Spaces toolbar (left rail) — light, matching the toolbar top (not dark). */
+  --pb-spaces-bg:         var(--pb-c-toolbar-top);
+
   /* Toolbar icon accents (flat tints; BB icons are monochrome line art).
    * Each is one token so it's trivial to retune or drop. */
   --pb-icon-get:          #3B7DD8; /* Get Messages — blue     */

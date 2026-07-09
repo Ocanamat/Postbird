@@ -80,6 +80,7 @@ to beat BB's folder-pane theming.
 | FP-09 | Account row wash off | MonterailDark:23 | `#folderTree li[data-server-type]` | ported | BB paints the account colour as inline `background-color:rgba(…,0.2)` on the account `<li>` (native full-row-colour); user `!important` overrides it → pane bg. Colour stays on the icon; selection/hover paint `.container` so still show. |
 | FP-10 | Section spacing | — | `#folderTree li[data-mode] > ul` (`padding-block-end`) | ported | Explicit `--pb-folder-section-gap` (10px) after a section's last folder so it isn't cramped against the next divider. (margin-bottom on the section was too subtle.) |
 | FP-11 | Section divider colour | — | `#folderPane { --sidebar-border-color }` (about3Pane.css:471) | ported | Sidebar bg lightened ~18% (`--pb-sidebar-divider`) so the line belongs to the dark pane instead of contrasting. |
+| FP-12 | Hide header buttons | — | `#folderPaneGetMessages`, `#folderPaneWriteMessage` (about3Pane.xhtml:69,75) | ported | `display:none` (v1.1). |
 | FP-07 | Row density | — | `#folderPane` (`--list-item-min-height`, tree-listbox.css:8,772) + `.name` font | ported | Reduce large default 26px → `--pb-folder-row-height` 20px; name → `--pb-folder-name-size`. |
 | FP-08 | White hairline at pane top | MonterailDark:23 | `#folderTree` (+ `.sidebar-panel-scroll::before/::after`, containers.css:27-48) + `#folderPaneHeaderBar` | ported | Pixel-measured 3px white strip at folder-tree top; force tree dark + neutralise scroll-shadow pseudo-elements. (Earlier `#folderPaneHeaderBar`-only fix missed it — that element is hidden.) |
 
@@ -138,6 +139,28 @@ Ground truth messengercompose.xhtml (`#msgcomposeWindow`, `#composeToolbar2`,
 | CO-01 | Toolbars + header block | MonterailDark:22 | `#msgcomposeWindow :is(#composeToolbar2, #MsgHeadersToolbar, #FormatToolbar)` | adapted | Chrome band; body iframe left white. |
 | CO-02 | Subject field | MonterailDark:21,38 | `#msgcomposeWindow #msgSubject` | adapted | White input, dark text. |
 | CO-04 | Writing-area card | refs/postbox-target/Screenshot_writeEmail.jpg | `#msgcomposeWindow #messageArea` (frame) + `#messageEditor` (margin/radius/shadow) — messengercompose.xhtml:2841,2862 | ported | Mirrors reader MH-07 via shared `--pb-msg-card-*` tokens for a consistent read/compose look. |
+
+## spacestoolbar — the left icon rail (component: `spacestoolbar.css`, v1.1)
+
+Ground truth `…/shared/spacesToolbar.css`. `#spacesToolbar` (`.spaces-toolbar`)
+is a fixed flex column, `justify-content: space-between`, bg `--spaces-bg-color`
+(`light-dark(#e8e8e8,#252525)`).
+
+| ID | UI element | Source | BB140 selector | Status | Notes |
+|----|-----------|--------|----------------|--------|-------|
+| ST-01 | Rail background | MonterailDark:2 | `#spacesToolbar { --spaces-bg-color }` | ported | Pinned light `--pb-spaces-bg` (#E8E8E8) regardless of OS light/dark. |
+| ST-02 | Centre icons | — | `#spacesToolbar { justify-content }` | ported | `center` (default pins them top). |
+
+## Recommended prefs (script, not CSS) — `scripts/configure-prefs.ps1`
+
+Not selectors — Betterbird prefs postbird expects, written to `user.js`:
+
+| Pref | Value | Meaning |
+|------|-------|---------|
+| `toolkit.legacyUserProfileCustomizations.stylesheets` | `true` | load userChrome/Content |
+| `mail.pane_config.dynamic` | `5` | message-pane layout (0 Classic · 2 Vertical=right · 5 Horizontal=bottom) |
+| `mail.threadpane.listview` | `0` | 0 Cards · 1 Table |
+| `mail.threadpane.cardsview.rowcount` | `2` | 2-line cards (clamped 2–3, about3Pane.js:5051) |
 
 ## statusbar — status bar (component: `statusbar.css`)
 

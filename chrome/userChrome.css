@@ -19,6 +19,7 @@
 
 @import url("postbird/components/threadpane.css");
 @import url("postbird/components/folderpane.css");
+@import url("postbird/components/spacestoolbar.css");
 @import url("postbird/components/toolbar.css");
 @import url("postbird/components/tabs.css");
 @import url("postbird/components/messageheader.css");

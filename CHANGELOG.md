@@ -4,6 +4,15 @@ All notable changes to postbird. Versions track the definition of done in
 `CLAUDE.md`; after v1.0, only migration repairs (Betterbird ESR bumps) are in
 scope unless scope is explicitly re-opened.
 
+## [Unreleased] — v1.1 (in progress)
+
+- **Spaces toolbar** (`spacestoolbar.css`): light rail (`#E8E8E8`, matching the
+  toolbar) with vertically-centred icons.
+- **Folder pane**: hide the header Get Messages + New Message buttons (FP-12).
+- **`scripts/configure-prefs.ps1`**: writes recommended Betterbird prefs to
+  `user.js` — message-pane layout, Cards view, 2-line cards, and enabling
+  userChrome. (Tooling, not part of the CSS theme.)
+
 ## [1.0.0] — 2026-07-09
 
 First complete theme. Targets **Betterbird 140.12.0esr-bb24**. Recreates
