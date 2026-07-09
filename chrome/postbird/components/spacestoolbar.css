@@ -22,6 +22,15 @@
   --spaces-bg-color: var(--pb-spaces-bg) !important;
 }
 
+/* ST-03  Slightly smaller icons + tighter padding → a narrower rail.
+ * (spacesToolbar.css:34-37 defaults: icon 20px, padding 7px, button-padding 5px.) */
+#spacesToolbar {
+  --spaces-icon-size: var(--pb-spaces-icon-size) !important;
+  --spaces-padding: 5px !important;
+  --spaces-button-padding: 4px !important;
+  --spaces-gap: 10px !important;
+}
+
 /* ST-02  Vertically centre the space icons, keeping settings/collapse at the
  * bottom. The blocker was #spacesToolbarAddonsContainer { flex: 1 1 0 }
  * (spacesToolbar.css:322): it grows to fill the column, pinning the top icons

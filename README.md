@@ -100,8 +100,9 @@ the current CSS-only approach** (a userChrome theme can't show a settings UI or
 import files on its own — that needs a real add-on).
 
 - [ ] **`userChrome.js` behaviour layer** — via a userChromeJS loader, add things
-      CSS can't: e.g. a **quick-reply box above the message body** in the reader
-      pane, or an account-name pill in the header.
+      CSS can't (each needs DOM reparenting/toggling): a **quick-reply box above
+      the message body**, an **account-name pill** in the header, **moving the
+      star/flag next to the subject**, and **collapsible message headers**.
 - [ ] **Package as a Thunderbird/Betterbird add-on** (MailExtension / theme).
 - [ ] **Import external palettes** — map Postbox colour themes (and formats like
       ColorSublime / themes.vscode.one) onto `config.css` tokens.
