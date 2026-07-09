@@ -9,7 +9,7 @@
 
     Prefs set:
       toolkit.legacyUserProfileCustomizations.stylesheets = true  (load userChrome/Content)
-      mail.pane_config.dynamic            = 5   (message-pane layout, see below)
+      mail.pane_config.dynamic            = 2   (message-pane layout, see below)
       mail.threadpane.listview            = 0   (0 = Cards view, 1 = Table)
       mail.threadpane.cardsview.rowcount  = 2   (2-line cards)
 
@@ -44,7 +44,7 @@ $ErrorActionPreference = 'Stop'
 # Recommended prefs (edit values here). Format: name = value (bool/int).
 $Prefs = [ordered]@{
     'toolkit.legacyUserProfileCustomizations.stylesheets' = $true
-    'mail.pane_config.dynamic'                            = 5
+    'mail.pane_config.dynamic'                            = 2
     'mail.threadpane.listview'                            = 0
     'mail.threadpane.cardsview.rowcount'                  = 2
 }

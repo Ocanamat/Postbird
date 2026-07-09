@@ -22,7 +22,12 @@
   --spaces-bg-color: var(--pb-spaces-bg) !important;
 }
 
-/* ST-02  Vertically centre the icons (default pins them to the top). */
-#spacesToolbar {
-  justify-content: center !important;
+/* ST-02  Vertically centre the space icons, keeping settings/collapse pinned
+ * to the bottom. `justify-content: center` alone didn't take on this 3-container
+ * flex (top / addons / bottom); auto top-margins on the top + bottom containers
+ * split the free space, which centres the icon group and pins the bottom group.
+ * (messenger.xhtml:3772/3820 — .spaces-toolbar-top/bottom-container.) */
+#spacesToolbar .spaces-toolbar-top-container,
+#spacesToolbar .spaces-toolbar-bottom-container {
+  margin-block-start: auto !important;
 }

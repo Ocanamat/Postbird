@@ -152,10 +152,12 @@
   --sidebar-border-color: var(--pb-sidebar-divider) !important;
 }
 
-/* FP-12  Hide the folder-pane header's Get Messages + New Message buttons.
- * (about3Pane.xhtml:69,75 — #folderPaneWriteMessage / #folderPaneGetMessages.)
- * The "..." (more) button stays for folder-pane options. */
-#folderPaneGetMessages,
-#folderPaneWriteMessage {
+/* FP-12  Hide the whole folder-pane header bar (New Message + Get Messages +
+ * the "..." button) — the visual equivalent of Betterbird's native
+ * "Hide Folder Pane Header" toggle (XULStore: folderPaneHeaderBar hidden).
+ * Doing it in CSS makes it portable out-of-box; users who want the header can
+ * remove this rule (or it can move to the prefs tooling instead).
+ * (about3Pane.xhtml:63 — #folderPaneHeaderBar.) */
+#folderPaneHeaderBar {
   display: none !important;
 }
