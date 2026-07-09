@@ -1,0 +1,26 @@
+/* ==========================================================================
+ * postbird — Postbox-style theme for Betterbird
+ * userChrome.css — THIN LOADER. No rules here. Only @import statements.
+ * --------------------------------------------------------------------------
+ * Load order matters:
+ *   1. config.css   — design tokens (custom properties). Must load first so
+ *                     every component can reference --pb-* variables.
+ *   2. components/* — one file per UI region. Order among them is not
+ *                     significant (selectors are scoped per region), but we
+ *                     keep them grouped by definition-of-done priority.
+ *
+ * Deploy:  scripts/deploy.ps1 copies chrome/ into the Betterbird profile.
+ * Target:  Betterbird 140.12.0esr-bb24 (see refs/betterbird-version.txt).
+ * Repair:  when a selector breaks after an ESR bump, see
+ *          docs/migration-runbook.md and docs/selector-map.md.
+ * ========================================================================== */
+
+@import url("postbird/config.css");
+
+@import url("postbird/components/threadpane.css");
+@import url("postbird/components/folderpane.css");
+@import url("postbird/components/toolbar.css");
+@import url("postbird/components/tabs.css");
+@import url("postbird/components/messageheader.css");
+@import url("postbird/components/composer.css");
+@import url("postbird/components/statusbar.css");

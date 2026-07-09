@@ -1,0 +1,177 @@
+/* ==========================================================================
+ * postbird — components/threadpane.css
+ * UI region: the message list (thread pane).
+ * Status: PORTED (first end-to-end component; validates the whole loop).
+ *
+ * TARGET  : Postbox two-line message row — line 1 = sender (bold) + date
+ *           (right, muted); line 2 = subject; a pale-blue unread dot at the
+ *           start; comfortable ~28px row height; near-white background;
+ *           thin grey divider between rows; solid-fill selection.
+ *           Ref: refs/postbox-target/Screenshot_mainWindow.jpg
+ *
+ * BB140   : The two-line layout is Betterbird's *Cards view*
+ *           (View ▸ Layout ▸ Cards view). DOM:
+ *              #threadTree[rows="thread-card"]              (table element)
+ *                tr.card-layout                             (a row)
+ *                  td > .card-container                     (grid)
+ *                    .thread-card-row  > .sender  .date
+ *                    .thread-card-row  > .thread-card-subject-container .subject
+ *                    .read-status                           (unread dot)
+ *           Row state lives in [data-properties~="unread|read|flagged|…"].
+ *           Ground truth: refs/betterbird-extracted/…/shared/threadCard.css
+ *           (+ threadPane.css). See docs/selector-map.md rows TP-01 … TP-10.
+ *
+ * WHY !important EVERYWHERE:
+ *           userChrome.css is a USER-origin stylesheet. In the cascade, normal
+ *           author declarations (Betterbird's own omni.ja CSS) beat normal
+ *           user declarations regardless of specificity — so a plain override
+ *           here silently loses (e.g. the green unread dot stayed green). Only
+ *           user `!important` outranks author styles. Every rule that competes
+ *           with a Betterbird author rule therefore uses `!important`.
+ *
+ * PERF    : No `*` selectors, no `:has()` inside #threadTree (virtualized
+ *           list). All rules scoped under #threadTree / #threadPane.
+ * ========================================================================== */
+
+/* --------------------------------------------------------------------------
+ * TP-01  Surface + accent token remap (Cards view)
+ * ------------------------------------------------------------------------ */
+#threadTree[rows="thread-card"] {
+  --tree-pane-background: var(--pb-bg-primary) !important;
+  --tree-card-background: var(--pb-bg-primary) !important;
+
+  /* Accent → orange. Cascades into BB's selection colour-mixes. */
+  --selected-item-color: var(--pb-accent) !important;
+
+  /* Postbox uses a SOLID selection fill; BB cards default to a subtle tint. */
+  --tree-card-background-selected:         var(--pb-selection-bg) !important;
+  --tree-card-background-selected-current: var(--pb-selection-bg) !important;
+  --tree-card-background-current:
+    color-mix(in srgb, var(--pb-accent) 12%, var(--pb-bg-primary)) !important;
+}
+
+/* Table view fallback: carry the sender colour onto unread rows. */
+#threadTree {
+  --unread-color: var(--pb-text-sender) !important;
+}
+
+/* --------------------------------------------------------------------------
+ * TP-02  Row density — tighten the card toward Postbox's ~28px two-line row
+ * ------------------------------------------------------------------------ */
+#threadTree[rows="thread-card"] .card-layout .card-container .thread-card-column {
+  gap: var(--pb-row-gap) !important;
+  padding-block: var(--pb-row-padding-block) !important;
+}
+
+/* --------------------------------------------------------------------------
+ * TP-03  Line 1 — sender (read state)
+ * ------------------------------------------------------------------------ */
+#threadTree[rows="thread-card"] .card-container .sender {
+  color: var(--pb-text-sender) !important;
+  font-weight: var(--pb-weight-sender) !important;
+  font-size: var(--pb-font-size-sender) !important;
+}
+
+/* TP-04  Line 1 — date (right, muted) */
+#threadTree[rows="thread-card"] .card-container .date {
+  color: var(--pb-text-date) !important;
+  font-size: var(--pb-font-size-sender) !important;
+}
+
+/* TP-05  Line 2 — subject (read state) */
+#threadTree[rows="thread-card"] .card-container .subject {
+  color: var(--pb-text-subject) !important;
+  font-size: var(--pb-font-size-subject) !important;
+}
+
+/* --------------------------------------------------------------------------
+ * TP-06  Unread state — heavier weight ONLY (same colour as read).
+ * In Monterail Dark unread differs by weight, not colour.
+ * ------------------------------------------------------------------------ */
+#threadTree[rows="thread-card"] .card-layout[data-properties~="unread"]
+  .card-container :is(.sender, .subject) {
+  font-weight: var(--pb-weight-unread) !important;
+}
+
+/* TP-07  Unread indicator dot — recolour BB's green dot to Postbox pale blue.
+ * Pale fill + saturated outline reads as Postbox's soft blue dot. */
+#threadTree[rows="thread-card"] .card-layout[data-properties~="unread"] {
+  --read-status-fill:
+    color-mix(in srgb, var(--pb-unread-indicator) 55%, white) !important;
+  --read-status-stroke: var(--pb-unread-indicator) !important;
+}
+
+/* --------------------------------------------------------------------------
+ * TP-08  Selected + focused — solid orange fill, light text (Postbox look)
+ * ------------------------------------------------------------------------ */
+#threadTree[rows="thread-card"]:is(:focus, :focus-within)
+  .card-layout.selected .card-container :is(.sender, .subject, .date) {
+  color: var(--pb-selection-text) !important;
+}
+
+/* --------------------------------------------------------------------------
+ * TP-09  Thread-pane header bar ("Inbox — N messages" strip above the list)
+ * Confirmed: about3Pane.xhtml:118 <div id="threadPaneHeaderBar" ...>.
+ * ------------------------------------------------------------------------ */
+#threadPaneHeaderBar {
+  background-color: var(--pb-bg-chrome) !important;
+}
+
+/* --------------------------------------------------------------------------
+ * TP-10  Flat Postbox-style list: drop the card box, add a thin row divider.
+ * BB Cards view draws a per-card border/rounding; Postbox rich rows are a flat
+ * continuous list with a hairline between rows. Divider goes on the <td> so it
+ * spans the full row width.
+ * ------------------------------------------------------------------------ */
+[is="tree-view-table-body"] > .card-layout > td > .card-container {
+  border: 0 !important;
+}
+[is="tree-view-table-body"] > .card-layout > td {
+  border-bottom: 1px solid var(--pb-row-divider) !important;
+}
+
+/* --------------------------------------------------------------------------
+ * TP-11  Thread-pane sender avatar size. The round images are injected by the
+ * "Auto Profile Picture" ADD-ON, but it reuses the standard `.recipient-avatar`
+ * class, so `--recipient-avatar-size` sizes them (native card rows have no
+ * avatar of their own). Kept scoped to #threadTree.
+ * ------------------------------------------------------------------------ */
+#threadTree {
+  --recipient-avatar-size: var(--pb-avatar-thread-size) !important;
+}
+
+/* TP-14  Vertically centre the add-on gravatar on the row. It lives in the
+ * first .thread-card-column (a flex column), alongside the read-status dot;
+ * auto block margins centre it over the row height.
+ * Element: div.recipient-avatar.has-avatar[data-auto-profile-picture-owner].
+ * ------------------------------------------------------------------------ */
+#threadTree .recipient-avatar {
+  margin-block: auto !important;
+}
+
+/* TP-15  A little breathing room to the right of the avatar column so the
+ * gravatar doesn't crowd the sender/subject text. The avatar sits in the first
+ * .thread-card-column (per the add-on's DOM); pad that column's inline end. */
+#threadTree[rows="thread-card"] .card-container > .thread-card-column:first-child {
+  padding-inline-end: var(--pb-card-avatar-gap) !important;
+}
+
+/* --------------------------------------------------------------------------
+ * TP-12  Make the per-account colour band more visible.
+ * BB draws the account colour as an inline `border-left: 5px solid
+ * rgba(r,g,b,0.2)` on the row <td> (thread-card.mjs:100). The colour/alpha
+ * (0.2) is computed in JS and can't be intensified from CSS, so we widen the
+ * band instead. Only rows that actually have the inline border are affected
+ * (no border-style ⇒ width does nothing).
+ * ------------------------------------------------------------------------ */
+#threadTree[rows="thread-card"] .card-layout > td {
+  border-inline-start-width: 8px !important;
+}
+
+/* TP-13  Vertically centre the unread dot on the row.
+ * The .read-status sits in a flex-column; auto block margins centre it over
+ * the full row height instead of pinning it to the top.
+ * ------------------------------------------------------------------------ */
+#threadTree[rows="thread-card"] .card-container .read-status {
+  margin-block: auto !important;
+}

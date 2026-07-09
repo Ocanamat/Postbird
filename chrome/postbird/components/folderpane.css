@@ -1,0 +1,153 @@
+/* ==========================================================================
+ * postbird — components/folderpane.css
+ * UI region: the folder / account tree (left pane).
+ * Status: PORTED.
+ *
+ * TARGET  : Monterail Dark pairs a light content area with a DARK charcoal
+ *           folder-pane sidebar (--pb-bg-sidebar #343430) + light text
+ *           (--pb-sidebar-text #F9FAFC), orange selection, and #dd491a
+ *           unread-count badges.
+ *
+ * PROVENANCE: selectors here are adapted from the maintainer's own, live-
+ *           tested userChrome (refs/community/2026Jul_userChrome.css). Those
+ *           class hooks are confirmed in BB140:
+ *             folder-tree-row.mjs:70 .name  :71 .icon  :72 .unread-count
+ *           Row = <li is="folder-tree-row">; content wrapper = div.container.
+ *           See docs/selector-map.md rows FP-01 … FP-06.
+ *
+ * NB      : This is the ONE region that is dark. `!important` is used to beat
+ *           Betterbird's own folder-pane theming, which is heavily specified;
+ *           the maintainer's tested rules needed it too.
+ * PERF    : scoped under #folderPane / #folderTree. No `*`, no `:has()`.
+ * ------------------------------------------------------------------------ */
+
+/* FP-01  Pane surface — dark sidebar + light default text */
+#folderPane {
+  background-color: var(--pb-bg-sidebar) !important;
+  color: var(--pb-sidebar-text) !important;
+}
+
+/* FP-08  Kill the ~3px white hairline at the top of the folder pane.
+ * Measured (screenshot pixel scan): a pure-white 3px strip spans the folder
+ * pane width at the very top, while the thread/message header band beside it is
+ * correctly chrome grey. Sources it could come from: the folder tree's
+ * scroll-shadow pseudo-elements (.sidebar-panel-scroll::before/::after,
+ * containers.css:27-48) and the tree's own transparent top showing through.
+ * Force the tree dark and neutralise the scroll shadows. Also keep
+ * #folderPaneHeaderBar dark for when it's enabled.
+ * ------------------------------------------------------------------------ */
+#folderTree,
+#folderPaneHeaderBar {
+  background-color: var(--pb-bg-sidebar) !important;
+}
+#folderTree.sidebar-panel-scroll::before,
+#folderTree.sidebar-panel-scroll::after {
+  background: transparent !important;
+}
+#folderPaneHeaderBar .button:not(.button-primary) {
+  color: var(--pb-sidebar-text) !important;
+}
+
+/* FP-07  Row density — reduce the (large) default folder-row height.
+ * BB derives row height from --list-item-min-height on `li > div` (the
+ * .container); default 26px, BB's "compact" preset 20px (tree-listbox.css:8).
+ * We also trim the folder-name font. Tune both in config.css. */
+#folderPane {
+  --list-item-min-height: var(--pb-folder-row-height) !important;
+}
+#folderTree li > div.container > span.name {
+  font-size: var(--pb-folder-name-size) !important;
+}
+
+/* FP-02  Folder / account name text */
+#folderTree li > div.container > span.name {
+  color: var(--pb-sidebar-text) !important;
+}
+
+/* FP-03a  Selected folder, pane focused — solid orange */
+#folderTree:focus-within li.selected > div.container {
+  background-color: var(--pb-selection-bg) !important;
+  color: var(--pb-selection-text) !important;
+}
+
+/* FP-03b  Selected folder, pane NOT focused — muted orange */
+#folderTree li.selected:not(:focus-within) > div.container {
+  background-color: var(--pb-selection-bg-inactive) !important;
+  color: var(--pb-selection-text) !important;
+}
+
+/* FP-04  Hover feedback */
+#folderTree li:hover > div.container {
+  background-color: var(--pb-sidebar-hover) !important;
+}
+
+/* FP-05  Unread-count badge — Postbox orange-red pill.
+ * `border: none` matters: BB gives collapsed folders that have unread CHILDREN
+ * (the All-Folders accounts) an OUTLINE badge — transparent bg + 1px border
+ * (about3Pane.css:644). Our filled colour hid the transparent bg but the border
+ * remained, so those pills looked different from the Favorite/Tags ones. Drop
+ * the border so every unread pill is a solid, borderless pill. */
+#folderTree li .unread-count {
+  background-color: var(--pb-folder-badge-bg) !important;
+  color: var(--pb-folder-badge-text) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 0 6px !important;
+  font-weight: bold !important;
+}
+
+/* FP-06  Folder icons — flat grey (Monterail/Monkai look), EXCEPT account
+ * (server) rows, whose icons keep their assigned account colour. This is the
+ * tasteful way to colour-code accounts: the colour rides on the small account
+ * icon instead of washing the whole row background (which reads as noisy).
+ * Account colour is set by BB's setIconColor as `--icon-color` on `.icon`
+ * (folder-tree-row.mjs:264); it only lives on the icon, so it can't drive a
+ * row-level stripe in CSS — the icon is the clean place for it.
+ * NB: if you were washing account row backgrounds via your own userChrome,
+ * remove that rule so this subtle treatment shows.
+ * ------------------------------------------------------------------------ */
+/* Grey icons: normal folders AND the smart/unified root (data-server-type
+ * "none" — SmartMailboxUtils), so "Unified Folders" matches the folders below
+ * it instead of showing an inbox-blue icon. */
+#folderTree li:not([data-server-type]) > .container > .icon,
+#folderTree li[data-server-type="none"] > .container > .icon {
+  --icon-color: var(--pb-sidebar-icon) !important;
+  fill: color-mix(in srgb, var(--icon-color, var(--folder-color-folder)) 40%, transparent);
+  stroke: var(--icon-color, var(--folder-color-folder));
+}
+
+/* Account (real server) icons keep their assigned colour as a filled swatch.
+ * Exclude the smart root (type "none"), handled grey above. */
+#folderTree li[data-server-type]:not([data-server-type="none"]) > .container > .icon {
+  fill: color-mix(in srgb, var(--icon-color, var(--pb-sidebar-icon)) 55%, transparent);
+  stroke: var(--icon-color, var(--pb-sidebar-icon));
+}
+
+/* FP-09  Remove the account-row colour WASH. Betterbird's native account
+ * colour is applied as an INLINE `background-color: rgba(r,g,b,0.2)` on the
+ * account <li> itself (confirmed in the live DOM). User-origin !important
+ * overrides that inline style, returning the row to the pane background — the
+ * account colour now lives only on the icon (FP-06). Selection/hover paint the
+ * `.container` (FP-03/04), so they still show. */
+#folderTree li[data-server-type] {
+  background-color: transparent !important;
+}
+
+/* FP-10  Breathing room below each section's last row, so it isn't cramped
+ * against the next section's divider (border-top on the next .mode-container,
+ * about3Pane.css:471). A small margin-bottom on the section was too subtle;
+ * add explicit padding at the END of the folder list instead so the last
+ * folder clearly clears the divider. Tune --pb-folder-section-gap to taste.
+ * (The mode li is a direct #folderTree child with data-mode — about3Pane.js:2239.) */
+#folderTree li[data-mode] > ul {
+  padding-block-end: var(--pb-folder-section-gap) !important;
+}
+
+/* FP-11  Section divider line — tone it into the dark pane. BB's section
+ * border reads var(--sidebar-border-color, var(--splitter-color))
+ * (about3Pane.css:471); we set --sidebar-border-color to the sidebar bg
+ * lightened a touch, so the line looks like part of the folder-pane group
+ * instead of a bright contrasting rule. */
+#folderPane {
+  --sidebar-border-color: var(--pb-sidebar-divider) !important;
+}

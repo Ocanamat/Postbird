@@ -1,0 +1,54 @@
+/* ==========================================================================
+ * postbird — components/tabs.css
+ * UI region: the tab bar (mail tab, message/settings tabs).
+ * Status: PORTED.
+ *
+ * TARGET  : Postbox tabs are blue-grey — active tab lighter
+ *           (Monterail --toolbar-tab-active #CBD4E0), inactive darker
+ *           (--toolbar-tab-inactive #B9C5D2).
+ *
+ * BB140   : Ground truth …/shared/tabmail.css. DOM:
+ *              #tabs-toolbar > #tabmail-tabs
+ *                > tab.tabmail-tab > .tab-background > .tab-line
+ *                                  > .tab-content > .tab-text-label
+ *           Selected state: .tab-background[selected=true] (tabmail.css:311,315).
+ *           See docs/selector-map.md region 'tabs'.
+ *
+ * WHY !important: userChrome is user-origin; see threadpane.css header.
+ * ------------------------------------------------------------------------ */
+
+/* TA-01  Tab strip background — set to the inactive-tab tone so the (lighter)
+ * active tab stands out against it. Previously the strip and the active tab
+ * were both chrome grey, so the active tab was invisible. */
+#tabmail-tabs {
+  background-color: var(--pb-tab-inactive-bg) !important;
+}
+
+/* TA-02  Inactive tabs — desaturated step below the chrome, so they recede */
+.tabmail-tab .tab-background:not([selected="true"]) {
+  background-color: var(--pb-tab-inactive-bg) !important;
+  background-image: none !important;
+}
+
+/* TA-03  Active tab — MERGE with the window chrome (no standout white card).
+ * Cover both markup forms and kill any lwtheme background image that would
+ * otherwise paint over the colour. */
+.tabmail-tab[selected="true"] .tab-background,
+.tabmail-tab .tab-background[selected="true"] {
+  background-color: var(--pb-tab-active-bg) !important;
+  background-image: none !important;
+}
+
+/* TA-04  Tab label text */
+.tabmail-tab .tab-content {
+  color: var(--pb-tab-text) !important;
+}
+
+/* TA-05  Divider below the tab strip — separate the tab bar from the panes.
+ * Without it the thread-pane header (quick-filter row) and the message pane
+ * blend straight into the tab bar. Full-width line under #tabmail-tabs.
+ * (messenger.xhtml:5455 <tabs id="tabmail-tabs">.)
+ * ------------------------------------------------------------------------ */
+#tabmail-tabs {
+  border-bottom: 1px solid var(--pb-chrome-divider) !important;
+}

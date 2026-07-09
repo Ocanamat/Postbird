@@ -1,0 +1,7 @@
+# refs/betterbird-version.txt — updated by scripts/check-version.ps1
+version=140.12.0esr-bb24
+channel=release
+extracted=2026-07-08          # date omni.ja was last extracted into refs/betterbird-extracted/
+previous=140.12.0esr-bb24     # last version the theme was verified against
+changelog=https://www.betterbird.eu/releasenotes/
+notes=

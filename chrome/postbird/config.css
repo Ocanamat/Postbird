@@ -1,0 +1,165 @@
+/* ==========================================================================
+ * postbird — config.css
+ * THE SINGLE SOURCE OF TRUTH FOR DESIGN VALUES.
+ *
+ * Rules:
+ *   - Every literal colour / size / font used by a component MUST be a
+ *     --pb-* custom property defined here. Components reference tokens only.
+ *   - Each token carries a provenance comment:
+ *        [MTRL]     refs/postbox-target/MonterailDark_PostboxTheme.css
+ *                   — the ACTUAL Postbox theme in the target screenshots
+ *                     (authoritative for colours).
+ *        [PB metrics] mailWindow1.css  — Postbox thread-pane weights/heights.
+ *        [SHOT]     refs/postbox-target/*.jpg — pixel-sampled (flat fills only;
+ *                     see caveat below).
+ *
+ * Accent: Postbox theme = "Monterail Dark" — a light content area with an
+ * ORANGE accent and a DARK charcoal folder-pane sidebar. This is why the
+ * screenshots didn't match Postbox's blue default-light theme.
+ *
+ * ClearType caveat: earlier per-glyph pixel samples read as warm red/brown —
+ * that was ClearType subpixel fringing on anti-aliased edges, NOT the real
+ * ink. Text colours below come from the theme CSS ([MTRL]), which is
+ * authoritative. Only flat fills (backgrounds, the orange accent, the unread
+ * dot icon) remain [SHOT]. In this theme UNREAD text is the same colour as
+ * read text and differs by WEIGHT only.
+ * ========================================================================== */
+
+:root {
+
+  /* ----------------------------------------------------------------------
+   * 1. RAW PALETTE — Monterail Dark theme values [MTRL: line refs]
+   * -------------------------------------------------------------------- */
+
+  /* Surfaces */
+  --pb-c-content-bg:     #fdfdfd; /* --bg-primary        :21 (thread/content) */
+  --pb-c-chrome-bg:      #F0F0F0; /* --bg-secondary      :22 (toolbars/panes) */
+  --pb-c-toolbar-top:    #E8E8E8; /* --toolbar-top       :2                    */
+  --pb-c-toolbar-bottom: #E0E0E0; /* --toolbar-bottom    :3                    */
+  --pb-c-sidebar-bg:     #343430; /* --bg-sidebar        :23 (DARK folder pane)*/
+  --pb-c-divider-dark:   #adb8c4; /* --divider-dark      :26                   */
+  --pb-c-divider-light:  #D2D8E6; /* --divider-light     :27                   */
+  --pb-c-row-divider:    #E4E4E4; /* thin grey line between thread rows (neutral)*/
+  --pb-c-chrome-divider: rgba(0,0,0,0.18); /* divider between chrome regions (matches BB toolbar border) */
+
+  /* Accent / selection (orange) */
+  --pb-c-selector:         #F07746;              /* --selector          :30    */
+  --pb-c-selector-inact:   rgba(240,119,70,0.6); /* --selector-inactive :32    */
+  --pb-c-folder-badge:     #dd491a;              /* --folder-bubble-bg  :51    */
+  --pb-c-hover:            rgba(132,146,166,0.35);/* --favbar-button-hover :18  */
+  --pb-c-sidebar-icon:     rgb(175,184,194);     /* folder-icon grey (user tuned; near --divider-dark) */
+  /* Folder-pane section divider: the sidebar bg lightened a touch, so the line
+   * reads as part of the dark pane rather than a bright contrasting rule. */
+  --pb-c-sidebar-divider:  color-mix(in srgb, var(--pb-c-sidebar-bg) 82%, white);
+
+  /* Tabs (Monterail blue-grey) */
+  --pb-c-tab-active:       #CBD4E0;              /* --toolbar-tab-active   :7  */
+  --pb-c-tab-inactive:     #B9C5D2;              /* --toolbar-tab-inactive :8  */
+
+  /* Text — content area */
+  --pb-c-font-primary:     #4C4C4C; /* --font-primary          :38 (sender)    */
+  --pb-c-font-secondary:   #5E6C79; /* --font-secondary        :40 (subj/date) */
+  --pb-c-font-selected:    #F9FAFC; /* --font-primary-selected :42             */
+  --pb-c-font-selected-2:  #E5E9F2; /* --font-secondary-selected :43           */
+  --pb-c-font-pending:     #8C96A0; /* --font-pending          :44             */
+
+  /* Text — dark sidebar (folder pane) */
+  --pb-c-sidebar-primary:  #F9FAFC; /* --font-primary-sidebar   :39            */
+  --pb-c-sidebar-secondary:#8494A3; /* --font-secondary-sidebar :41            */
+
+  /* Unread dot — a fixed Postbox icon, not a theme colour [SHOT] */
+  --pb-c-unread-dot:       #4AB1FF; /* sampled 429,125–440,136 (most-saturated)*/
+
+  /* ----------------------------------------------------------------------
+   * 2. SEMANTIC TOKENS — what components reference.
+   * -------------------------------------------------------------------- */
+
+  /* Surfaces */
+  --pb-bg-primary:        var(--pb-c-content-bg);
+  --pb-bg-chrome:         var(--pb-c-chrome-bg);
+  --pb-bg-sidebar:        var(--pb-c-sidebar-bg);
+  --pb-divider:           var(--pb-c-divider-dark);
+  --pb-row-divider:       var(--pb-c-row-divider);
+  --pb-chrome-divider:    var(--pb-c-chrome-divider);
+
+  /* Toolbar surface — Monterail two-tone (top → bottom) */
+  --pb-toolbar-bg:        linear-gradient(var(--pb-c-toolbar-top), var(--pb-c-toolbar-bottom));
+
+  /* Toolbar icon accents (flat tints; BB icons are monochrome line art).
+   * Each is one token so it's trivial to retune or drop. */
+  --pb-icon-get:          #3B7DD8; /* Get Messages — blue     */
+  --pb-icon-compose:      #3F9E56; /* Write/New — green        */
+  --pb-icon-reply:        #5A7FA6; /* reply/reply-all/forward/redirect — slate-blue */
+  --pb-icon-archive:      #C08A3E; /* Archive — amber          */
+  --pb-icon-delete:       #D24B3A; /* Delete — red             */
+  --pb-icon-junk:         var(--pb-c-selector); /* Junk — orange accent */
+
+  /* Toolbar button density (BB default --button-padding is 6px). Lower these
+   * to pack the icon-over-text buttons closer together. */
+  --pb-toolbar-btn-padding: 3px;
+  --pb-toolbar-btn-gap:     2px;
+  --pb-toolbar-label-size:  0.8rem;
+
+  /* Tabs. Monterail's blue-grey tabs stood out too much, so we key the tabs
+   * off the neutral window chrome instead: the active tab MERGES with the
+   * chrome, and the inactive tab is a slightly darker, desaturated step down
+   * so it recedes. (Monterail --toolbar-tab-* kept in raw palette for ref.) */
+  --pb-tab-active-bg:     var(--pb-bg-chrome);   /* lighter chrome grey (matches message-header bg); pops vs the darker strip */
+  --pb-tab-inactive-bg:   color-mix(in srgb, var(--pb-bg-chrome) 90%, #808080);
+  --pb-tab-text:          var(--pb-c-font-primary);
+
+  /* Accent / selection */
+  --pb-accent:            var(--pb-c-selector);
+  --pb-selection-bg:      var(--pb-c-selector);
+  --pb-selection-bg-inactive: var(--pb-c-selector-inact);
+  --pb-selection-text:    var(--pb-c-font-selected);
+
+  /* Thread-pane text (read == unread colour; unread differs by weight only) */
+  --pb-text-sender:       var(--pb-c-font-primary);   /* line 1 sender         */
+  --pb-text-subject:      var(--pb-c-font-secondary); /* line 2 subject        */
+  --pb-text-date:         var(--pb-c-font-secondary); /* line 1 date           */
+  --pb-text-pending:      var(--pb-c-font-pending);
+  --pb-unread-indicator:  var(--pb-c-unread-dot);
+
+  /* Folder-pane (dark sidebar) — used by folderpane.css */
+  --pb-sidebar-text:      var(--pb-c-sidebar-primary);
+  --pb-sidebar-text-muted:var(--pb-c-sidebar-secondary);
+  --pb-sidebar-hover:     var(--pb-c-hover);
+  --pb-sidebar-icon:      var(--pb-c-sidebar-icon);
+  --pb-sidebar-divider:   var(--pb-c-sidebar-divider);
+  --pb-folder-badge-bg:   var(--pb-c-folder-badge);
+  --pb-folder-badge-text: #FFFFFF;                    /* --folder-bubble-text :54 */
+
+  /* ----------------------------------------------------------------------
+   * 3. THREAD-PANE METRICS  [PB metrics: mailWindow1.css]
+   * -------------------------------------------------------------------- */
+  --pb-row-height:        28px;   /* rich (2-line) row height       :639/:647 */
+  --pb-row-padding-block: 3px;    /* tightened toward PB density               */
+  --pb-row-gap:           1px;    /* gap between sender line & subject line     */
+
+  /* Folder-pane density. BB default --list-item-min-height is 26px (:8);
+   * 20px == BB's own "compact" preset. Tune here if the pane feels large. */
+  --pb-folder-row-height: 20px;
+  --pb-folder-name-size:  0.9rem;
+  --pb-folder-section-gap: 10px; /* space after a section's last folder, before the next divider */
+
+  /* Message pane "card": grey frame + inset white message body. */
+  --pb-msg-card-margin-top:    8px;
+  --pb-msg-card-margin-side:   12px;  /* left/right, Postbox-ish */
+  --pb-msg-card-margin-bottom: 18px;  /* generous bottom */
+  --pb-msg-card-radius:        6px;
+
+  /* ----------------------------------------------------------------------
+   * 4. TYPOGRAPHY  (inherit the OS UI font; set only size/weight)
+   * -------------------------------------------------------------------- */
+  --pb-font-size-sender:   0.95rem;
+  --pb-font-size-subject:  0.90rem;
+
+  /* Avatars — trimmed ~10%/8% from BB defaults (thread 28px, header 26px). */
+  --pb-avatar-thread-size: 25px;  /* thread pane (avatars.css:8 default 28px)  */
+  --pb-avatar-header-size: 24px;  /* message header (messageHeader.css:11 26px)*/
+  --pb-card-avatar-gap:    3px;   /* extra space right of the avatar column     */
+  --pb-weight-read:        400;   /* [PB metrics] cell-text(read)    :42       */
+  --pb-weight-sender:      600;   /* [PB metrics] richrowtitle       :47       */
+  --pb-weight-unread:      700;   /* [PB metrics] cell-text(unread) bold :57   */
+}

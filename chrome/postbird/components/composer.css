@@ -1,0 +1,56 @@
+/* ==========================================================================
+ * postbird — components/composer.css
+ * UI region: the compose window (separate top-level window).
+ * Status: ADAPTED (first pass — verify against a compose screenshot).
+ *
+ * TARGET  : refs/postbox-target/Screenshot_writeEmail.jpg — recipient header
+ *           block + toolbars on the light Monterail chrome band, white body.
+ *
+ * BB140   : Ground truth messengercompose.xhtml. DOM:
+ *              html#msgcomposeWindow
+ *                #composeToolbar2        (Send / Save / Contacts …)  :2162
+ *                #composeContentBox      (:2172)
+ *                  #MsgHeadersToolbar    (address rows)              :2191
+ *                    .address-row / #msgSubjectContainer / #msgSubject
+ *                  #FormatToolbar        (Paragraph / B / I / …)     :2543
+ *                  editor (#content-frame) — left white.
+ *           See docs/selector-map.md region 'composer'.
+ *
+ * SCOPE   : Everything is scoped under #msgcomposeWindow so it can never leak
+ *           into the 3-pane window (userChrome applies to all chrome windows).
+ * WHY !important: userChrome is user-origin; see threadpane.css header.
+ * ------------------------------------------------------------------------ */
+
+/* CO-01  Compose toolbars + header block — Monterail chrome band */
+#msgcomposeWindow #composeToolbar2,
+#msgcomposeWindow #MsgHeadersToolbar,
+#msgcomposeWindow #FormatToolbar {
+  background-color: var(--pb-bg-chrome) !important;
+}
+
+/* CO-03  Menu bar — same surface as the toolbar (compose window).
+ * (messengercompose.xhtml:979 <toolbar id="compose-toolbar-menubar2">.) */
+#msgcomposeWindow #compose-toolbar-menubar2 {
+  background: var(--pb-toolbar-bg) !important;
+}
+
+/* CO-02  Subject field — keep it a clean white input on the chrome band */
+#msgcomposeWindow #msgSubject {
+  background-color: var(--pb-bg-primary) !important;
+  color: var(--pb-text-sender) !important;
+}
+
+/* CO-04  Writing area as a floating "card", matching the reader pane (MH-07):
+ * grey frame + inset editor with the SAME margins, radius and soft shadow, for
+ * a consistent look between reading and composing.
+ * DOM: #composeContentBox > … > #messageArea > <editor id="messageEditor">
+ * (messengercompose.xhtml:2841,2862). Shares the --pb-msg-card-* tokens. */
+#msgcomposeWindow #messageArea {
+  background-color: var(--pb-bg-chrome) !important;
+}
+#msgcomposeWindow #messageEditor {
+  margin: var(--pb-msg-card-margin-top) var(--pb-msg-card-margin-side)
+          var(--pb-msg-card-margin-bottom) var(--pb-msg-card-margin-side) !important;
+  border-radius: var(--pb-msg-card-radius) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.10) !important;
+}

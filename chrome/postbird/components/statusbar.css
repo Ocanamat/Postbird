@@ -1,0 +1,27 @@
+/* ==========================================================================
+ * postbird — components/statusbar.css
+ * UI region: the status bar (bottom edge of the 3-pane window).
+ * Status: ADAPTED (first pass — verify against a screenshot).
+ *
+ * TARGET  : Postbox status bar — thin chrome-coloured strip, muted text.
+ *
+ * BB140   : Ground truth messenger.xhtml:7027. DOM:
+ *              hbox#status-bar.statusbar.chromeclass-status
+ *                #statusTextBox > .statusbarpanel / #statusText
+ *                #statusbar-progresspanel, #quotaPanel …
+ *           See docs/selector-map.md region 'statusbar'.
+ *
+ * WHY !important: userChrome is user-origin; see threadpane.css header.
+ * ------------------------------------------------------------------------ */
+
+/* SB-01  Status strip — chrome band + top divider + muted text */
+#status-bar {
+  background-color: var(--pb-bg-chrome) !important;
+  color: var(--pb-text-date) !important;
+  border-top: 1px solid var(--pb-chrome-divider) !important;
+}
+
+/* SB-02  Status text panels inherit the muted colour */
+#status-bar :is(#statusText, .statusbarpanel) {
+  color: var(--pb-text-date) !important;
+}

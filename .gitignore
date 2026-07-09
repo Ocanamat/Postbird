@@ -1,0 +1,24 @@
+# ==========================================================================
+# postbird .gitignore
+# The working tree carries a lot of LOCAL reference material that must NOT be
+# published: the maintainer's real inbox screenshots (privacy), Postbox's
+# proprietary theme (copyright), the multi-thousand-file Betterbird omni.ja
+# extraction (bloat + third-party MPL), and other people's userChrome projects.
+# We publish only the theme itself + docs + scripts. See refs/README.md for how
+# to repopulate refs/ locally.
+# ==========================================================================
+
+# --- refs/: all local reference material, EXCEPT the version pin + its readme.
+refs/*
+!refs/betterbird-version.txt
+!refs/README.md
+
+# --- Local, machine-specific, or regenerable ---
+.claude/settings.local.json
+.codegraph/
+
+# --- OS / editor noise ---
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp

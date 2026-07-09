@@ -1,0 +1,59 @@
+/* ==========================================================================
+ * postbird — content/message-body.css
+ * Styles the EMAIL BODY (a content document), via userContent.css.
+ * Status: PORTED (conservative first pass).
+ *
+ * Thunderbird/Betterbird wraps the rendered body in known classes:
+ *   .moz-text-plain   plain-text email
+ *   .moz-text-flowed  format=flowed plain-text email
+ *   .moz-text-html    HTML email (sender-designed — restyle sparingly!)
+ *   .moz-signature    the signature block
+ *   .moz-forward-container  a forwarded message
+ *   blockquote[type="cite"] quoted text in replies
+ *
+ * DESIGN RULE: HTML emails are laid out by the sender; aggressively restyling
+ * .moz-text-html (widths, fonts, colours) breaks newsletters. So readability
+ * rules here target PLAIN / FLOWED text; only structural, safe rules touch
+ * HTML (pre-wrap, signature de-emphasis, selection colour).
+ * ========================================================================== */
+
+/* MB-01  Plain-text readability — cap line length + comfortable line-height +
+ * a little padding. NOT applied to .moz-text-html (would squish designed
+ * mail). This is the "long lines in non-HTML emails" fix, scoped correctly. */
+.moz-text-plain,
+.moz-text-flowed {
+  max-width: 100ch !important;
+  line-height: 1.5 !important;
+  padding: 6px 12px !important;
+}
+
+/* MB-02  Preformatted blocks wrap instead of forcing a horizontal scrollbar. */
+.moz-text-plain pre,
+.moz-text-flowed pre,
+.moz-text-html pre {
+  white-space: pre-wrap !important;
+}
+
+/* MB-03  Quoted text (reply citations) — muted with an accent rule, Postbox-ish.
+ * Scoped to type="cite" so it only hits quoting, not sender blockquotes. */
+blockquote[type="cite"] {
+  border-inline-start: 2px solid var(--pb-accent) !important;
+  padding-inline-start: 8px !important;
+  color: var(--pb-text-subject) !important;
+}
+
+/* MB-04  Forwarded-message container — subtle delineation (no debug border). */
+.moz-forward-container {
+  border-inline-start: 2px solid var(--pb-divider) !important;
+  padding-inline-start: 8px !important;
+}
+
+/* MB-05  De-emphasise signatures. */
+.moz-signature {
+  opacity: 0.6 !important;
+}
+
+/* MB-06  Text selection uses the theme accent. */
+::selection {
+  background-color: color-mix(in srgb, var(--pb-accent) 30%, transparent) !important;
+}

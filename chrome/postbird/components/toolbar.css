@@ -1,0 +1,81 @@
+/* ==========================================================================
+ * postbird — components/toolbar.css
+ * UI region: the main (unified) toolbar — Get Mail, Reply, Archive, etc.
+ * Status: PORTED (background + icon tints).
+ *
+ * TARGET  : Postbox's toolbar is a light two-tone strip (Monterail
+ *           --toolbar-top #E8E8E8 → --toolbar-bottom #E0E0E0) with flat,
+ *           functionally-coloured icons.
+ *
+ * BB140   : Ground truth refs/betterbird-extracted/…/shared/unifiedToolbar.css
+ *           + unifiedToolbarShared.css. DOM:
+ *              unified-toolbar > #unifiedToolbarContainer > #unifiedToolbar
+ *                > #unifiedToolbarContent > ul.unified-toolbar
+ *                  > li.<action> > button.unified-toolbar-button
+ *                      > .button-icon   (content: var(--icon-*))
+ *           Icons use -moz-context-properties: fill, stroke → recolourable.
+ *           Background is NOT set by BB here (it shows the window chrome, hence
+ *           white); we set it. See docs/selector-map.md region 'toolbar'.
+ *
+ * WHY !important: userChrome is user-origin; see threadpane.css header.
+ * ------------------------------------------------------------------------ */
+
+/* TB-01  Toolbar surface — Monterail two-tone */
+unified-toolbar,
+#unifiedToolbarContainer {
+  background: var(--pb-toolbar-bg) !important;
+}
+
+/* TB-03  Menu bar — same surface as the toolbar (main window).
+ * (messenger.xhtml:3890 <toolbar id="toolbar-menubar">.) */
+#toolbar-menubar {
+  background: var(--pb-toolbar-bg) !important;
+}
+
+/* --------------------------------------------------------------------------
+ * TB-02  Button density — pack the icon-over-text buttons closer together.
+ * Buttons sit at justify-content:start with no inter-item gap, so each
+ * button's width (label text + --button-padding, default 6px) is what spaces
+ * them out. We trim the inline padding, the icon↔label gap, and the label
+ * font so the buttons draw tighter. All three are config.css tokens.
+ * (unifiedToolbarShared.css:305 .unified-toolbar-button; variables.css:34.)
+ * ------------------------------------------------------------------------ */
+.unified-toolbar .unified-toolbar-button {
+  --button-padding: var(--pb-toolbar-btn-padding) !important;
+  gap: var(--pb-toolbar-btn-gap) !important;
+}
+.unified-toolbar .unified-toolbar-button .button-label {
+  font-size: var(--pb-toolbar-label-size) !important;
+}
+
+/* --------------------------------------------------------------------------
+ * TB-ICONS  Per-button flat icon tints (Postbox-style functional colour).
+ * BB icons are monochrome line art (context-fill); each gets ONE flat colour.
+ * Pattern mirrors BB's own icon styling: light fill + full-strength stroke.
+ * Multi-hue Postbox icon art would need asset replacement → docs/backlog.md.
+ * This whole block can be commented out to revert to neutral icons.
+ * ------------------------------------------------------------------------ */
+.unified-toolbar .get-messages .button-icon {
+  fill: color-mix(in srgb, var(--pb-icon-get) 20%, transparent) !important;
+  stroke: var(--pb-icon-get) !important;
+}
+.unified-toolbar .write-message .button-icon {
+  fill: color-mix(in srgb, var(--pb-icon-compose) 20%, transparent) !important;
+  stroke: var(--pb-icon-compose) !important;
+}
+.unified-toolbar :is(.reply, .reply-all, .reply-to-list, .forward-inline, .redirect) .button-icon {
+  fill: color-mix(in srgb, var(--pb-icon-reply) 20%, transparent) !important;
+  stroke: var(--pb-icon-reply) !important;
+}
+.unified-toolbar .archive .button-icon {
+  fill: color-mix(in srgb, var(--pb-icon-archive) 20%, transparent) !important;
+  stroke: var(--pb-icon-archive) !important;
+}
+.unified-toolbar .delete .button-icon {
+  fill: color-mix(in srgb, var(--pb-icon-delete) 20%, transparent) !important;
+  stroke: var(--pb-icon-delete) !important;
+}
+.unified-toolbar .junk .button-icon {
+  fill: color-mix(in srgb, var(--pb-icon-junk) 20%, transparent) !important;
+  stroke: var(--pb-icon-junk) !important;
+}

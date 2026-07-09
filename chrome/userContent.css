@@ -1,0 +1,15 @@
+/* ==========================================================================
+ * postbird — userContent.css — THIN LOADER for CONTENT documents.
+ * --------------------------------------------------------------------------
+ * userContent.css styles the *content* shown in Betterbird: the email message
+ * BODY (and feeds / web pages). This is separate from userChrome.css, which
+ * styles the app UI shell. Content documents do NOT inherit the chrome
+ * document's custom properties, so we re-import config.css here to make the
+ * --pb-* tokens available to the body rules.
+ *
+ * Deploy: scripts/deploy.ps1 copies this to <profile>/chrome/userContent.css.
+ * ========================================================================== */
+
+@import url("postbird/config.css");
+
+@import url("postbird/content/message-body.css");
