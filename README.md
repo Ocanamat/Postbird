@@ -1,23 +1,54 @@
+<div align="center">
+
 # postbird
 
-A **Postbox-style theme for [Betterbird](https://www.betterbird.eu/)**, built
-entirely with `userChrome.css` / `userContent.css` — no add-ons, no JS, no
-autoconfig. It recreates the look and feel of the (discontinued) Postbox email
-client, specifically its **"Monterail Dark"** theme: a light content area with
+**A [Postbox](https://en.wikipedia.org/wiki/Postbox_(email_client))-style theme for [Betterbird](https://www.betterbird.eu/) — pure `userChrome` / `userContent` CSS. No add-ons, no JS.**
+
+[![License: MIT](https://img.shields.io/github/license/Ocanamat/Postbird?color=blue)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/Ocanamat/Postbird?display_name=tag&sort=semver)](https://github.com/Ocanamat/Postbird/releases)
+[![Betterbird 140.x](https://img.shields.io/badge/Betterbird-140.x%20ESR-orange)](https://www.betterbird.eu/)
+[![Downloads](https://img.shields.io/github/downloads/Ocanamat/Postbird/total)](https://github.com/Ocanamat/Postbird/releases)
+[![Stars](https://img.shields.io/github/stars/Ocanamat/Postbird?style=flat)](https://github.com/Ocanamat/Postbird/stargazers)
+[![Last commit](https://img.shields.io/github/last-commit/Ocanamat/Postbird)](https://github.com/Ocanamat/Postbird/commits)
+
+<img src="docs/screenshot.png" alt="postbird — Postbox-style theme for Betterbird" width="900">
+
+</div>
+
+## Quick start
+
+```powershell
+git clone https://github.com/Ocanamat/Postbird.git postbird
+cd postbird
+./scripts/deploy.ps1        # auto-detects your Betterbird/Thunderbird profile
+```
+
+Then, in Betterbird:
+
+1. **Settings → General → Config Editor** → set
+   `toolkit.legacyUserProfileCustomizations.stylesheets` = `true` (one-time).
+2. **View ▸ Layout ▸ Cards view** (the thread pane rules need it).
+3. **Restart Betterbird.**
+
+Re-run `deploy.ps1` and restart after any change. `-ProfilePath` overrides
+auto-detection; `-Link` junctions the folder for live editing.
+
+---
+
+postbird recreates the look and feel of the discontinued **Postbox** email
+client — specifically its **"Monterail Dark"** theme: a light content area with
 an orange accent and a dark charcoal folder pane.
 
 > Targets **Betterbird 140.x ESR** (`140.12.0esr-bb24`). Betterbird 140 uses an
-> HTML thread tree, so the selectors are written fresh against that DOM — they
-> will also mostly apply to matching Thunderbird 140 ESR builds, but that isn't
-> a support target.
+> HTML thread tree, so selectors are written fresh against that DOM.
 
-## What it themes (v1.0)
+## What it themes
 
 Thread pane · folder pane · unified toolbar · tabs · message header · composer ·
 status bar — plus the email **body** (via `userContent.css`). Highlights:
 
 - Two-line "card" message rows, warm-neutral text, pale-blue unread dots, a
-  per-account colour band, a solid-orange selection.
+  per-account colour band, a solid-orange selection, centred sender avatars.
 - Dark charcoal folder pane with account-coloured icons and orange unread pills.
 - Two-tone toolbar with flat, functionally-coloured action icons.
 - Reader **and** composer show the message as a floating white card on a grey
@@ -26,30 +57,16 @@ status bar — plus the email **body** (via `userContent.css`). Highlights:
 
 ## Requirements
 
-- Betterbird 140.x.
-- Pref `toolkit.legacyUserProfileCustomizations.stylesheets = true`
-  (Settings → General → Config Editor).
-- Thread pane in **Cards view** (View ▸ Layout ▸ Cards view).
+- Betterbird 140.x (`toolkit.legacyUserProfileCustomizations.stylesheets = true`).
+- Thread pane in **Cards view**.
 - Optional: the *Auto Profile Picture* add-on for sender gravatars (postbird
-  sizes/centres them if present, but doesn't require it).
+  sizes/centres them if present; it doesn't require them).
 
-## Install
+## Configure
 
-```powershell
-git clone <this-repo> postbird
-cd postbird
-./scripts/deploy.ps1        # auto-detects your Betterbird/Thunderbird profile
-```
-
-Then **restart Betterbird**. `deploy.ps1` copies `chrome/userChrome.css`,
-`chrome/userContent.css`, and `chrome/postbird/` into your profile's `chrome/`
-folder (it only touches files postbird owns). Pass `-ProfilePath` to override
-auto-detection, or `-Link` to junction the folder for live editing.
-
-To tune values, edit `chrome/postbird/config.css` (all colours/sizes are
-`--pb-*` tokens there), redeploy, restart.
-
-## Layout
+All colours and sizes are `--pb-*` tokens in
+[`chrome/postbird/config.css`](chrome/postbird/config.css) — edit there,
+redeploy, restart. Components reference tokens only.
 
 ```
 chrome/
@@ -57,69 +74,57 @@ chrome/
   userContent.css             loader (email body)
   postbird/
     config.css                ALL design tokens (single source of truth)
-    components/*.css           one file per UI region
-    content/message-body.css   email body styling
-docs/
-  selector-map.md             the spine: Postbox rule → BB140 selector → status
-  migration-runbook.md        how to repair after a Betterbird ESR bump
-  smoke-test.md               post-deploy visual checklist
-  backlog.md                  out-of-scope / blocked ideas
+    components/*.css            one file per UI region
+    content/message-body.css    email body styling
+docs/                          selector map, migration runbook, smoke test, backlog
 scripts/deploy.ps1
-refs/                         LOCAL reference material — not published (see refs/README.md)
 ```
 
 ## Design goal: cheap repair
 
-Betterbird ESR updates move selectors. postbird is optimised so a break is
-findable in minutes: every rule maps to a row in
+Betterbird ESR updates move selectors. postbird is built so a break is findable
+in minutes: every rule maps to a row in
 [`docs/selector-map.md`](docs/selector-map.md), and
-[`docs/migration-runbook.md`](docs/migration-runbook.md) is the step-by-step fix
-procedure. All literals live in `config.css`; components reference tokens only.
+[`docs/migration-runbook.md`](docs/migration-runbook.md) is the step-by-step fix.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full working agreement.
 
 ## Development
 
-Branching model:
+- **`main`** — the published branch (default). Releases tagged here.
+- **`feat/<name>`** — one branch per feature/fix off `main`, merged via PR.
 
-- **`main`** — the published GitHub branch (clean history, protected/default).
-  Releases are tagged here (`v1.0.0`, …).
-- **`feat/<name>`** — one branch per feature/fix, branched off `main`, merged
-  back via PR. Keep commits scoped and reference the relevant `docs/` rows.
-- **`master`** — the maintainer's *local-only* archive of the original,
-  pre-release history (contains the bulky `refs/` material). **Not pushed.**
+## Roadmap (post-v1.0)
 
-Everyday flow: `git switch -c feat/x` off `main` → edit `chrome/postbird/…` →
-`./scripts/deploy.ps1` → restart → screenshot compare → update
-`docs/selector-map.md` → PR into `main`. See `CLAUDE.md` / `AGENTS.md` for the
-full working agreement.
+These are future directions, not commitments; several would mean **moving beyond
+the current CSS-only approach** (a userChrome theme can't show a settings UI or
+import files on its own — that needs a real add-on).
 
-## Roadmap / ideas (post-v1.0)
-
-v1.0 is intentionally fixed-scope (see `CLAUDE.md`). These are future directions,
-not commitments — and several would mean **moving beyond the current CSS-only
-approach** (a userChrome theme can't show a settings UI or import files on its
-own; that needs a real add-on / MailExtension).
-
-- [ ] **`userChrome.js` behaviour layer** — via a userChromeJS loader, add
-      things CSS can't do, e.g. a **quick-reply box above the message body** in
-      the reader pane, or an account-name pill in the header. (Explicitly
-      relaxes the current CSS-only constraint — a deliberate future direction.)
-- [ ] **Package as a Thunderbird/Betterbird add-on** (MailExtension / theme)
-      instead of a manual `userChrome` deploy.
-- [ ] **Import external palettes** — generalise the token layer so Postbox colour
-      themes (and formats like ColorSublime / themes.vscode.one) map onto
-      `config.css` tokens.
+- [ ] **`userChrome.js` behaviour layer** — via a userChromeJS loader, add things
+      CSS can't: e.g. a **quick-reply box above the message body** in the reader
+      pane, or an account-name pill in the header.
+- [ ] **Package as a Thunderbird/Betterbird add-on** (MailExtension / theme).
+- [ ] **Import external palettes** — map Postbox colour themes (and formats like
+      ColorSublime / themes.vscode.one) onto `config.css` tokens.
 - [ ] **In-app settings page** to switch themes and enable/disable postbird.
 - [ ] **Per-mod toggles** (à la Obsidian *Style Settings*): enable/disable each
       mod, with custom colours / sizes / fonts.
-- [ ] **Add-on-specific mods** listed with the same enable/disable +
-      customisation controls (e.g. the gravatar tweaks).
-- [ ] **Breaking-change checklist / detector** for Betterbird updates — a formal
-      procedure building on `docs/migration-runbook.md`.
+- [ ] **Add-on-specific mods** with the same enable/disable + customisation.
+- [ ] **Breaking-change checklist / detector** for Betterbird updates.
 
-## Licence & credits
+## Credits
 
-- postbird's CSS: **MIT** (see [`LICENSE`](LICENSE)).
-- Betterbird / Thunderbird / Mozilla: the DOM and class names postbird targets
-  are theirs (MPL-2.0). No Mozilla or Betterbird code is bundled here.
-- Postbox / "Monterail Dark": design inspiration only. No Postbox code or assets
-  are redistributed — colours were re-derived into tokens.
+- **[Postbox](https://en.wikipedia.org/wiki/Postbox_(email_client))** and its
+  *Monterail Dark* theme — the interface this recreates (design inspiration; no
+  Postbox code or assets are redistributed here).
+- **[Betterbird](https://www.betterbird.eu/)** and **[Mozilla Thunderbird](https://www.thunderbird.net/)**
+  — the client and upstream this themes.
+- Prior-art community userChrome projects that informed the techniques here:
+  **[aris-t2/customcssfortb](https://github.com/aris-t2/customcssfortb)**,
+  **[rafaelmardojai/thunderbird-gnome-theme](https://github.com/rafaelmardojai/thunderbird-gnome-theme)**,
+  and other Betterbird/Thunderbird userChrome themes shared by the community.
+- **Auto Profile Picture** add-on — sender gravatars in the message list.
+
+## Licence
+
+[MIT](LICENSE). postbird's CSS/docs/scripts only; it targets — but bundles none
+of — Betterbird/Thunderbird/Mozilla (MPL-2.0) or Postbox.

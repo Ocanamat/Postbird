@@ -14,8 +14,16 @@ refs/*
 !refs/README.md
 
 # --- Local, machine-specific, or regenerable ---
-.claude/settings.local.json
 .codegraph/
+
+# --- AI-assistant assets: kept LOCAL (agents still use them), not published ---
+.claude/
+.gemini/
+.mcp.json
+CLAUDE.md
+claude.md
+GEMINI.md
+AGENTS.md
 
 # --- OS / editor noise ---
 Thumbs.db
